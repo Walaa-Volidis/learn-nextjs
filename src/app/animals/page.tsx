@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 export default function Animals(){
     const animalsList: string[] = ['cat', 'dog', 'bird', 'fish', 'hamster', 'rabbit'];
-    const [animals, setAnimals] =useState([]);
+    const [animals, setAnimals] =useState(['']);
 
     const AddAnimal = () => {
         const randomAnimals = Math.floor(Math.random() * animalsList.length);
