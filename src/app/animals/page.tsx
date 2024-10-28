@@ -8,7 +8,7 @@ export default function Animals() {
 
   const addAnimal = () => {
     const randomAnimal = Math.floor(Math.random() * animalsList.length);
-    setAnimals((prev) => [...animals, animalsList[randomAnimal]]);
+    setAnimals((prev) => [...prev, animalsList[randomAnimal]]);
   };
   return (
     <div>
