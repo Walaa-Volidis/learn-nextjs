@@ -5,11 +5,11 @@ export default function Home() {
   const [counter, setCounter] = useState(0);
 
   const handleIncrement = () => {
-    setCounter(prev => prev + 1);
+    setCounter(counter + 1);
   };
 
   const handleDecrement = () => {
-    setCounter(prev => prev - 1);
+    setCounter(counter - 1);
   };
 
   return (
