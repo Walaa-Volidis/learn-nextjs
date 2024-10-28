@@ -1,18 +1,22 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-export default function Animals(){
-    const animalsList: string[] = ['cat', 'dog', 'bird', 'fish', 'hamster', 'rabbit'];
-    const [animals, setAnimals] =useState(['']);
+const animalsList = ["cat", "dog", "bird", "fish", "hamster", "rabbit"];
 
-    const AddAnimal = () => {
-        const randomAnimals = Math.floor(Math.random() * animalsList.length);
-        setAnimals([...animals, animalsList[randomAnimals]]);
-    }
-    return(<div>
-       <button onClick = {AddAnimal}>Add Animal</button>
-       {animals && animals.map((animal, i)=>{
-          return <div key={i}>{animal}</div>
-       })}
-    </div>);
+export default function Animals() {
+  const [animals, setAnimals] = useState([""]);
+
+  const addAnimal = () => {
+    const randomAnimal = Math.floor(Math.random() * animalsList.length);
+    setAnimals((prev) => [...animals, animalsList[randomAnimal]]);
+  };
+  return (
+    <div>
+      <button onClick={addAnimal}>Add Animal</button>
+      {animals.length > 0 &&
+        animals.map((animal, i) => {
+          return <div key={i}>{animal}</div>;
+        })}
+    </div>
+  );
 }
