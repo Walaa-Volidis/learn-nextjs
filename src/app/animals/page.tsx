@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 const animalsList = ["cat", "dog", "bird", "fish", "hamster", "rabbit"];
 
 export default function Animals() {
-  const [animals, setAnimals] = useState([""]);
+  const [animals, setAnimals] = useState<string[]>([]);
 
   useEffect(() => {
     const storedAnimals = localStorage.getItem("animals");
