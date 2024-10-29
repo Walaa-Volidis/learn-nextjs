@@ -1,14 +1,31 @@
-import { currentUser } from "@clerk/nextjs/server";
 
-export default async function Home() {
-  const user = await currentUser();
-  const userName = user?.username;
-  const welcomeMessage = userName ? `Welcome, ${userName}!` : "";
+"use client";
+import React, { useState, useEffect } from "react";
 
+export default function Home() {
+  const [counter, setCounter] = useState(0);
+  useEffect(() => {
+    const storedCounter = localStorage.getItem("counter");
+    if (storedCounter) {
+      setCounter(parseInt(storedCounter));
+    }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("counter", counter.toString());
+  }, [counter]);
   return (
     <div>
-      <h1>{welcomeMessage}</h1>
-      <h1>Walaa is Cool!</h1>
+      <h1>{counter}</h1>
+      <div>
+        <button onClick={() => setCounter((prev) => prev + 1)}>
+          Increment
+        </button>
+      </div>
+      <div>
+        <button onClick={() => setCounter((prev) => prev - 1)}>
+          Decrement
+        </button>
+      </div>
     </div>
   );
 }
