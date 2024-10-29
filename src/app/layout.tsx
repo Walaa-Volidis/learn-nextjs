@@ -17,12 +17,14 @@ export default function RootLayout({
       <html lang="en">
         <body>
           <header>
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
+            <div>
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton showName/>
+              </SignedIn>
+            </div>
           </header>
           <main>{children}</main>
         </body>
