@@ -50,10 +50,9 @@ export default function TaskForm({ onSubmit }: TaskFormProps) {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button>
-          <PlusCircle />
-        </Button>
-        Add New ToDo Task
+        {/* <Button> */}
+        <PlusCircle />
+        {/* </Button> */}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -84,9 +83,9 @@ export default function TaskForm({ onSubmit }: TaskFormProps) {
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
-              {categories.map((category, index) => {
+              {categories.map((category) => {
                 return (
-                  <SelectItem key={index} value={category}>
+                  <SelectItem key={category} value={category}>
                     {category}
                   </SelectItem>
                 );

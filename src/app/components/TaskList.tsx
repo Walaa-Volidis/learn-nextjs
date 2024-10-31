@@ -4,17 +4,18 @@ import { TrashIcon } from "lucide-react";
 
 interface TaskListProps {
   tasks: Task[];
-  //onUpdate: (id: string) => void; I will add it later
   onDelete: (id: string) => void;
 }
-
 export function TaskList({ tasks, onDelete }: TaskListProps) {
+
   return (
     <div className="space-y-4">
       {tasks.map((task) => (
         <div
           key={task.id}
-          className={"flex items-start justify-between p-4 border rounded-lg bg-white transition-colors"}
+          className={
+            "flex items-start justify-between p-4 border rounded-lg bg-white transition-colors"
+          }
         >
           <div className="flex items-start space-x-3 flex-1">
             <div className="space-y-1">

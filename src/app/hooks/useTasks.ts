@@ -11,7 +11,7 @@ export const useTasks = ()=>{
     },[]);
 
     useEffect(()=>{
-      localStorage.setItem("tasks", JSON.stringify(tasks));     
+      localStorage.setItem("tasks", JSON.stringify(tasks)); 
     },[tasks]);
 
     const addTask = (task: Omit<Task, 'id'>)=>{

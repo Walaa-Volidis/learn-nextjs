@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -14,36 +15,40 @@ import { Search } from "lucide-react";
 import TaskForm from "@/app/components/TaskForm";
 import { TaskList } from "@/app/components/TaskList";
 import { useTasks } from "@/app/hooks/useTasks";
-// Define TaskFilter type directly in this file if it doesn't exist in the module
+
 type TaskFilter = {
   search: string;
   category: string;
-  dueDate: string;
+  date: string;
 };
 
 export default function TodoPage() {
-  const { tasks, addTask, updateTask, deleteTask } = useTasks();
+  const { tasks, addTask, deleteTask } = useTasks();
   const [filters, setFilters] = useState<TaskFilter>({
     search: "",
-    category: "all",
-    dueDate: "",
+    category: "choose",
+    date: "",
   });
 
   // Filter tasks
-  const filteredTasks = tasks.filter((task) => {
-    const searchText = filters.search.toLowerCase();
-    const matchSearch = 
-      task.title.toLowerCase().includes(searchText) ||
-      task.description.toLowerCase().includes(searchText) ||
-      task.category.toLowerCase().includes(searchText);
-    // const matchCategory = 
-    //    filters.category
-  //   const matchesCategory =
-  //     filters.category === "all" || task.category === filters.category;
-  //   const matchesDate = !filters.dueDate || task.dueDate === filters.dueDate;
+  // const filteredTasks = tasks.filter((task) => {
+  //   const searchText = filters.search.toLowerCase();
+  //   const matchSearch =
+  //     task.title.toLowerCase().includes(searchText) ||
+  //     task.description.toLowerCase().includes(searchText) ||
+  //     task.category.toLowerCase().includes(searchText);
 
-  //   return matchesSearch && matchesCategory && matchesDate;
-   });
+  //   const matchCategory = task.category
+  //     .toLowerCase()
+  //     .includes(filters.category);
+  //   const matchDate = task.date === filters.date;
+
+  //   return matchSearch && matchCategory && matchDate;
+  // });
+
+  const handleSearch = () => {
+    console.log("searched tasks");
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -89,12 +94,11 @@ export default function TodoPage() {
             </Select>
             <Input
               type="date"
-              value={filters.dueDate}
-              onChange={(e) =>
-                setFilters({ ...filters, dueDate: e.target.value })
-              }
+              value={filters.date}
+              onChange={(e) => setFilters({ ...filters, date: e.target.value })}
               className="w-[180px]"
             />
+            <Button onClick={handleSearch}>Search</Button>
           </div>
 
           {/* Add Task Form */}
@@ -102,8 +106,8 @@ export default function TodoPage() {
 
           {/* Task List */}
           <TaskList
-            tasks={filteredTasks}
-            //onUpdate={updateTask}
+            //tasks={filteredTasks}
+            tasks={tasks}
             onDelete={deleteTask}
           />
         </CardContent>
