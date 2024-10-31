@@ -14,7 +14,7 @@ export const useTasks = ()=>{
       localStorage.setItem("tasks", JSON.stringify(tasks));     
     },[tasks]);
 
-    const addTask = (task:Task)=>{
+    const addTask = (task: Omit<Task, 'id'>)=>{
         const newTask:Task = {
              ...task,
              id: uuidv4().toString()

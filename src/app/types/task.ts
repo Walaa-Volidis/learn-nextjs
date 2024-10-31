@@ -7,8 +7,7 @@ export interface Task {
 }
 
 export interface TaskSearch{
-    title?: string
+    search?: string
     category?: string
-    description?: string
     date?: string
 }
