@@ -30,25 +30,25 @@ export default function TodoPage() {
     date: "",
   });
 
-  // Filter tasks
-  // const filteredTasks = tasks.filter((task) => {
-  //   const searchText = filters.search.toLowerCase();
-  //   const matchSearch =
-  //     task.title.toLowerCase().includes(searchText) ||
-  //     task.description.toLowerCase().includes(searchText) ||
-  //     task.category.toLowerCase().includes(searchText);
+  const filteredTasks = tasks.filter((task) => {
+    const searchText = filters.search.toLowerCase();
+    const matchSearch =
+      task.title.toLowerCase().includes(searchText) ||
+      task.description.toLowerCase().includes(searchText) ||
+      task.category.toLowerCase().includes(searchText);
 
-  //   const matchCategory = task.category
-  //     .toLowerCase()
-  //     .includes(filters.category);
-  //   const matchDate = task.date === filters.date;
+    const matchCategory =
+      filters.category === "choose" ||
+      task.category.toLowerCase().includes(filters.category.toLowerCase());
+    const matchDate = !filters.date || task.date === filters.date;
 
-  //   return matchSearch && matchCategory && matchDate;
-  // });
+    return matchSearch && matchCategory && matchDate;
+  });
 
-  const handleSearch = () => {
-    console.log("searched tasks");
-  };
+  const finalTasks =
+    !filters.search && filters.category === "choose" && !filters.date
+      ? tasks
+      : filteredTasks;
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -98,7 +98,6 @@ export default function TodoPage() {
               onChange={(e) => setFilters({ ...filters, date: e.target.value })}
               className="w-[180px]"
             />
-            <Button onClick={handleSearch}>Search</Button>
           </div>
 
           {/* Add Task Form */}
@@ -106,8 +105,7 @@ export default function TodoPage() {
 
           {/* Task List */}
           <TaskList
-            //tasks={filteredTasks}
-            tasks={tasks}
+            tasks={finalTasks}
             onDelete={deleteTask}
           />
         </CardContent>
