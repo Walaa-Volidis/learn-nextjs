@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -104,10 +103,7 @@ export default function TodoPage() {
           <TaskForm onSubmit={addTask} />
 
           {/* Task List */}
-          <TaskList
-            tasks={finalTasks}
-            onDelete={deleteTask}
-          />
+          <TaskList tasks={finalTasks} onDelete={deleteTask} />
         </CardContent>
       </Card>
     </div>
