@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
 
-const categories = ["choose", "Work", "Personal", "Health", "Other"];
+const Categories_List = ["choose", "Work", "Personal", "Health", "Other"];
 
 interface TaskFormProps {
   onSubmit: (task: {
@@ -83,7 +83,7 @@ export default function TaskForm({ onSubmit }: TaskFormProps) {
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
-              {categories.map((category) => {
+              {Categories_List.map((category) => {
                 return (
                   <SelectItem key={category} value={category}>
                     {category}
