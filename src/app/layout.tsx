@@ -22,7 +22,7 @@ export default function RootLayout({
                 <SignInButton />
               </SignedOut>
               <SignedIn>
-                <UserButton showName/>
+                <UserButton showName />
               </SignedIn>
             </div>
           </header>
