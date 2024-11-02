@@ -50,9 +50,7 @@ export default function TaskForm({ onSubmit }: TaskFormProps) {
   return (
     <Dialog>
       <DialogTrigger>
-        {/* <Button> */}
         <PlusCircle />
-        {/* </Button> */}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

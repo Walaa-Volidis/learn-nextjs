@@ -58,7 +58,6 @@ export default function TodoPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          {/* Search and Filters */}
           <div className="flex flex-wrap gap-4">
             <div className="flex-1">
               <div className="relative">
@@ -99,10 +98,8 @@ export default function TodoPage() {
             />
           </div>
 
-          {/* Add Task Form */}
           <TaskForm onSubmit={addTask} />
 
-          {/* Task List */}
           <TaskList tasks={finalTasks} onDelete={deleteTask} />
         </CardContent>
       </Card>
