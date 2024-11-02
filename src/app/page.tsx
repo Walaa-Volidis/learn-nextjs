@@ -41,7 +41,7 @@ export default function TodoPage() {
       task.category.toLowerCase().includes(filters.category.toLowerCase());
     const matchDate = !filters.date || task.date === filters.date;
 
-    return matchSearch && matchCategory && matchDate;
+    return matchSearch  || matchCategory || matchDate;
   });
 
   const finalTasks =
