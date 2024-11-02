@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Task } from '../types/task';
-import { v4 as uuidv4 } from 'uuid';
 
 export const useTasks = ()=>{
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -17,7 +16,7 @@ export const useTasks = ()=>{
     const addTask = (task: Omit<Task, 'id'>)=>{
         const newTask:Task = {
              ...task,
-             id: uuidv4().toString()
+             id: crypto.randomUUID().toString()
         }
         setTasks((prev)=>[...prev, newTask]);
     }
