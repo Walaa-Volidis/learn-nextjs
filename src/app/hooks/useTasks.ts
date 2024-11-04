@@ -1,47 +1,55 @@
-import { useState, useEffect } from 'react';
-import { z } from 'zod';
-import { Task } from '../types/task';
+import { useState, useEffect } from "react";
+import { z } from "zod";
 
-export const useTasks = ()=>{
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const TaskSchema = z.object({
-      id: z.string().optional(),
-      title: z.string(),
-      description: z.string(),
-      category: z.string(),
-      date: z.string(),
-    });
-    useEffect(()=>{      
-       const storedTasks = localStorage.getItem("tasks");
-       setTasks(storedTasks? JSON.parse(storedTasks):[]);
-    },[]);
+const ZTaskSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string(),
+  category: z.string(),
+  date: z.string(),
+});
 
-    useEffect(()=>{
-      localStorage.setItem("tasks", JSON.stringify(tasks)); 
-    },[tasks]);
+export type Task = z.infer<typeof ZTaskSchema>;
+export const useTasks = () => {
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-
-    const addTask = (task: Omit<Task, 'id'>)=>{
-      const parsedTask = TaskSchema.omit({id: true}).parse(task);
-        const newTask:Task = {
-             ...parsedTask,
-             id: crypto.randomUUID().toString()
-        }
-        setTasks((prev)=>[...prev, newTask]);
+  useEffect(() => {
+    const storedTasks = localStorage.getItem("tasks");
+    if (!storedTasks) {
+      setTasks([]);
+      return;
     }
+    const parsedTask = ZTaskSchema.array().parse(JSON.parse(storedTasks));
+    setTasks(parsedTask);
+  }, []);
 
-    const deleteTask = (id:string)=>{
-        setTasks((prev)=>prev.filter(task=>task.id !== id));
-    }
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
-    const updateTask = (task:Task)=>{
-        const parsedTask = TaskSchema.parse(task) as Task;
-        setTasks((prev) => prev.map((t) => (t.id === parsedTask.id ? parsedTask : t)));
-    }
-    return {
-        tasks,
-        addTask,
-        deleteTask,
-        updateTask
-    }
-}
+  const addTask = (task: Omit<Task, "id">) => {
+    const parsedTask = ZTaskSchema.omit({ id: true }).parse(task);
+    const newTask: Task = {
+      ...parsedTask,
+      id: crypto.randomUUID().toString(),
+    };
+    setTasks((prev) => [...prev, newTask]);
+  };
+
+  const deleteTask = (id: string) => {
+    setTasks((prev) => prev.filter((task) => task.id !== id));
+  };
+
+  const updateTask = (task: Task) => {
+    const parsedTask = ZTaskSchema.parse(task);
+    setTasks((prev) =>
+      prev.map((t) => (t.id === parsedTask.id ? parsedTask : t))
+    );
+  };
+  return {
+    tasks,
+    addTask,
+    deleteTask,
+    updateTask,
+  };
+};
