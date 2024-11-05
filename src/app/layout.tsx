@@ -6,6 +6,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import "./globals.css";
+import Head from "next/head";
 
 export default function RootLayout({
   children,
@@ -15,6 +16,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <Head>
+          <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        </Head>
         <body>
           <header>
             <div>
