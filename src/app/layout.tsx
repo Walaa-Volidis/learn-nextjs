@@ -1,12 +1,6 @@
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider, SignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 import "./globals.css";
-import Head from "next/head";
+import Sidebar from "./components/SideBar";
 
 export default function RootLayout({
   children,
@@ -16,21 +10,22 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <Head>
+        <head>
           <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-        </Head>
+        </head>
         <body>
-          <header>
-            <div>
-              <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton showName />
-              </SignedIn>
+          <SignedIn>
+            <div className="flex">
+              <Sidebar className="flex-shrink-0" />
+              <main className="flex-grow">{children}</main>
             </div>
-          </header>
-          <main>{children}</main>
+          </SignedIn>
+
+          <SignedOut>
+            <div className="flex justify-center items-center min-h-screen">
+              <SignIn routing="hash" />
+            </div>
+          </SignedOut>
         </body>
       </html>
     </ClerkProvider>

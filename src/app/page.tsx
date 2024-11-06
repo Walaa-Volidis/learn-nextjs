@@ -14,7 +14,7 @@ import { Search } from "lucide-react";
 import TaskForm from "@/app/components/TaskForm";
 import { TaskList } from "@/app/components/TaskList";
 import { useTasks } from "@/app/hooks/useTasks";
-
+import { useUser } from "@clerk/nextjs";
 type TaskFilter = {
   search: string;
   category: string;
@@ -22,7 +22,9 @@ type TaskFilter = {
 };
 
 export default function TodoPage() {
-  const { tasks, addTask, deleteTask } = useTasks();
+  const { user } = useUser();
+  const userId = user?.id;
+  const { tasks, addTask, deleteTask } = useTasks(userId);
   const [filters, setFilters] = useState<TaskFilter>({
     search: "",
     category: "choose",
