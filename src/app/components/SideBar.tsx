@@ -72,8 +72,6 @@ const Sidebar = ({ className = "" }) => {
               </span>
             </div>
           )}
-          {/* second solution */}
-          {/* <UserButton showName /> */}
         </div>
       </div>
     </div>
