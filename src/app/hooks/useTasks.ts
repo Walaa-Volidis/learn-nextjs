@@ -10,22 +10,24 @@ const ZTaskSchema = z.object({
 });
 
 export type Task = z.infer<typeof ZTaskSchema>;
-export const useTasks = () => {
+export const useTasks = (userId: string | undefined) => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    const storedTasks = localStorage.getItem("tasks");
+    if (!userId) return;
+    const storedTasks = localStorage.getItem(`tasks_${userId}`);
     if (!storedTasks) {
       setTasks([]);
       return;
     }
     const parsedTask = ZTaskSchema.array().parse(JSON.parse(storedTasks));
     setTasks(parsedTask);
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+    if (!userId) return;
+    localStorage.setItem(`tasks_${userId}`, JSON.stringify(tasks));
+  }, [tasks, userId]);
 
   const addTask = (task: Omit<Task, "id">) => {
     const parsedTask = ZTaskSchema.omit({ id: true }).parse(task);
@@ -46,6 +48,7 @@ export const useTasks = () => {
       prev.map((t) => (t.id === parsedTask.id ? parsedTask : t))
     );
   };
+
   return {
     tasks,
     addTask,
