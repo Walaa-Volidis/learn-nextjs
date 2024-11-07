@@ -1,7 +1,6 @@
 import { ClerkProvider, SignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 import "./globals.css";
-import Sidebar from "./components/SideBar";
-
+import { AppSidebar } from "./components/app-sidebar";
 export default function RootLayout({
   children,
 }: {
@@ -16,7 +15,9 @@ export default function RootLayout({
         <body>
           <SignedIn>
             <div className="flex">
-              <Sidebar className="flex-shrink-0" />
+              <div className="group/sidebar-wrapper">
+                <AppSidebar />
+              </div>
               <main className="flex-grow">{children}</main>
             </div>
           </SignedIn>
