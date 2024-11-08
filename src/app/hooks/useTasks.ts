@@ -11,11 +11,18 @@ const ZTaskSchema = z.object({
   userId: z.string(),
 });
 
+const ZUserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().optional(),
+});
 
 export type Task = z.infer<typeof ZTaskSchema>;
+
+export type User = z.infer<typeof ZUserSchema>;
 export const useTasks = (userId: string | undefined) => {
   const [tasks, setTasks] = useState<Task[]>([]);
-
+  const [user, setUser] = useState<User>();
   useEffect(() => {
     if (!userId) return;
     const fetchTasks = async () => {
@@ -24,6 +31,7 @@ export const useTasks = (userId: string | undefined) => {
           userId,
         },
       });
+      if (!tasks) return;
       const paresedTasks = tasks.map((task) => ({
         ...task,
         date: task.date.toISOString(),
@@ -79,10 +87,30 @@ export const useTasks = (userId: string | undefined) => {
     );
   };
 
+  const addUser = async (user: User) => {
+    await ZUserSchema.parse(user);
+    const existedUser = await prisma.user.findFirst({
+      where: {
+        id: user.id,
+      },
+    });
+    if (!existedUser) {
+      const newUser = await prisma.user.create({
+        data: {
+          ...user,
+          email: user.email ?? "",
+        },
+      });
+
+      setUser(newUser);
+    }
+  };
+
   return {
     tasks,
     addTask,
     deleteTask,
     updateTask,
+    addUser,
   };
 };
