@@ -1,6 +1,7 @@
 import { ClerkProvider, SignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 import "./globals.css";
 import { AppSidebar } from "./components/app-sidebar";
+
 export default function RootLayout({
   children,
 }: {
