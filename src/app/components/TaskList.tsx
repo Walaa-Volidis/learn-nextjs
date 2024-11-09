@@ -4,7 +4,7 @@ import { TrashIcon } from "lucide-react";
 
 interface TaskListProps {
   tasks: Task[];
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
 }
 export function TaskList({ tasks, onDelete }: TaskListProps) {
 
