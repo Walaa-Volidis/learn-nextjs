@@ -1,5 +1,5 @@
 export interface Task {
-  id: number;
+  id: string;
   title: string;
   description: string;
   category: string;
@@ -10,11 +10,4 @@ export interface TaskSearch {
   search?: string;
   category?: string;
   date?: string;
-}
-
-export interface Users {
-  id: string;
-  name: string;
-  email: string | undefined;
-  createdAt: string;
 }

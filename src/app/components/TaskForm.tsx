@@ -16,7 +16,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
 
 const Categories_List = ["choose", "Work", "Personal", "Health", "Other"];
 
@@ -26,13 +25,10 @@ interface TaskFormProps {
     description: string;
     category: string;
     date: string;
-    userId: string;
   }) => void;
 }
 
 export default function TaskForm({ onSubmit }: TaskFormProps) {
-  const {user} = useUser();
-  const userId = user?.id;
   const [task, setTask] = useState({
     title: "",
     description: "",
@@ -42,7 +38,7 @@ export default function TaskForm({ onSubmit }: TaskFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({...task, userId: userId!});
+    onSubmit(task);
     setTask({
       title: "",
       description: "",
