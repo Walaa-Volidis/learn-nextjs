@@ -17,8 +17,6 @@ export async function GET() {
     ...task,
     date: task.date.toISOString(),
   }));
-
-  const tasksArray = ZTaskSchema.array();
-  const validatedResponse = tasksArray.parse(formattedResponse);
+  const validatedResponse = ZTaskSchema.array().parse(formattedResponse);
   return Response.json(validatedResponse);
 }
