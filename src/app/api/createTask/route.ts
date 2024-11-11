@@ -15,12 +15,13 @@ export async function POST(request: Request) {
       title: formData.get("title") as string,
       description: formData.get("description") as string,
       category: formData.get("category") as string,
-      date: formData.get("date") as string,
+      date: new Date(formData.get("date") as string).toISOString(),
       userId: formData.get("userId") as string,
     });
     const response = await prisma.task.create({ data: task });
     return new Response(JSON.stringify(response), { status: 201 });
   } catch (error) {
+    console.log(error);
     return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 400,
     });

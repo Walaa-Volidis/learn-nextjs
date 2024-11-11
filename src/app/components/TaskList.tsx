@@ -9,9 +9,9 @@ interface TaskListProps {
 export function TaskList({ tasks, onDelete }: TaskListProps) {
   return (
     <div className="space-y-4">
-      {tasks.map((task) => (
+      {tasks.map((task, index) => (
         <div
-          key={task.id}
+          key={index}
           className={
             "flex items-start justify-between p-4 border rounded-lg bg-white transition-colors"
           }

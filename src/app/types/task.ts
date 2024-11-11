@@ -4,6 +4,7 @@ export interface Task {
   description: string;
   category: string;
   date: string;
+  userId: string;
 }
 
 export interface TaskSearch {
