@@ -12,7 +12,7 @@ export function useTasks(userId: string | undefined) {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch("/api/listTasks");
+      const response = await fetch("/api/list-tasks");
       if (!response.ok) {
         throw new Error("Failed to fetch tasks");
       }
@@ -25,7 +25,7 @@ export function useTasks(userId: string | undefined) {
 
   const addTask = async (formData: FormData) => {
     try {
-      const response = await fetch("/api/createTask", {
+      const response = await fetch("/api/create-task", {
         method: "POST",
         body: formData,
       });
@@ -41,7 +41,7 @@ export function useTasks(userId: string | undefined) {
 
   const deleteTask = async (id: string) => {
     try {
-      const response = await fetch(`/api/deleteTask/${id}`, {
+      const response = await fetch(`/api/delete-task/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
