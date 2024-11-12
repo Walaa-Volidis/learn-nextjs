@@ -16,6 +16,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Categories_List = ["choose", "Work", "Personal", "Health", "Other"];
 
@@ -38,6 +40,8 @@ export default function TaskForm({ userId, addTask }: TaskFormProps) {
     formData.append("userId", userId);
     try {
       await addTask(formData);
+      toast.success("Task added successfully.");
+
       setTask({
         title: "",
         description: "",
@@ -45,6 +49,7 @@ export default function TaskForm({ userId, addTask }: TaskFormProps) {
         date: "",
       });
     } catch (error) {
+      toast.error("Error submitting task. Please try again.");
       console.error("Error submitting task:", error);
     }
   }
@@ -109,6 +114,7 @@ export default function TaskForm({ userId, addTask }: TaskFormProps) {
           </Button>
         </form>
       </DialogContent>
+      <ToastContainer />
     </Dialog>
   );
 }
