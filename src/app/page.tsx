@@ -15,6 +15,7 @@ import TaskForm from "@/app/components/TaskForm";
 import { TaskList } from "@/app/components/TaskList";
 import { useTasks } from "@/app/hooks/useTasks";
 import { useUser } from "@clerk/nextjs";
+
 type TaskFilter = {
   search: string;
   category: string;
@@ -30,26 +31,6 @@ export default function TodoPage() {
     category: "choose",
     date: "",
   });
-
-  const filteredTasks = tasks.filter((task) => {
-    const searchText = filters.search.toLowerCase();
-    const matchSearch =
-      task.title.toLowerCase().includes(searchText) ||
-      task.description.toLowerCase().includes(searchText) ||
-      task.category.toLowerCase().includes(searchText);
-    const matchCategory =
-      filters.category === "choose" ||
-      task.category.toLowerCase().includes(filters.category.toLowerCase());
-
-    const matchDate = !filters.date || task.date === filters.date;
-
-    return matchSearch && matchCategory && matchDate;
-  });
-
-  const finalTasks =
-    !filters.search && filters.category === "choose" && !filters.date
-      ? tasks
-      : filteredTasks;
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -100,9 +81,9 @@ export default function TodoPage() {
             />
           </div>
 
-          <TaskForm onSubmit={addTask} />
+          {userId && <TaskForm userId={userId} addTask={addTask} />}
 
-          <TaskList tasks={finalTasks} onDelete={deleteTask} />
+          <TaskList tasks={tasks} onDelete={deleteTask} />
         </CardContent>
       </Card>
     </div>
