@@ -3,10 +3,9 @@ import { z } from "zod";
 import { NextResponse } from "next/server";
 
 const ZTaskSchema = z.object({
-  id: z.number().optional(),
-  title: z.string(),
-  description: z.string(),
-  category: z.string(),
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "description is required"),
+  category: z.string().min(1, "Category is required"),
   date: z.string().datetime(),
   userId: z.string(),
 });
@@ -27,13 +26,11 @@ export async function PATCH(
       where: {
         id: parseInt(params.id, 10),
       },
-      data: {
-        ...task,
-      },
+      data: task,
     });
     return NextResponse.json(updatedTask, { status: 200 });
   } catch (error) {
-    console.error("Error updating task:", error); 
+    console.error("Error updating task:", error);
     return NextResponse.json(
       { error: "An error occurred while updating the task" },
       { status: 400 }
