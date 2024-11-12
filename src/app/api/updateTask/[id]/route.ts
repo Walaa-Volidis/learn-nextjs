@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { z } from "zod";
+import { NextResponse } from "next/server";
 
 const ZTaskSchema = z.object({
   id: z.number().optional(),
@@ -16,11 +17,11 @@ export async function PATCH(
   try {
     const formData = await request.formData();
     const task = ZTaskSchema.parse({
-      title: formData.get("title") as string,
-      description: formData.get("description") as string,
-      category: formData.get("category") as string,
-      date: formData.get("date") as string,
-      userId: formData.get("userId") as string,
+      title: formData.get("title"),
+      description: formData.get("description"),
+      category: formData.get("category"),
+      date: formData.get("date"),
+      userId: formData.get("userId"),
     });
     const updatedTask = await prisma.task.update({
       where: {
@@ -30,10 +31,12 @@ export async function PATCH(
         ...task,
       },
     });
-    return new Response(JSON.stringify(updatedTask), { status: 200 });
+    return NextResponse.json(updatedTask, { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: (error as Error).message }), {
-      status: 400,
-    });
+    console.error("Error updating task:", error); 
+    return NextResponse.json(
+      { error: "An error occurred while updating the task" },
+      { status: 400 }
+    );
   }
 }
