@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function DELETE(
   request: Request,
@@ -11,12 +12,11 @@ export async function DELETE(
       },
     });
 
-    return new Response(JSON.stringify("this task deleted successfully"), {
-      status: 200,
-    });
+    return NextResponse.json({ message: "Task successfully deleted" });
   } catch (error) {
-    return new Response(JSON.stringify({ error: (error as Error).message }), {
-      status: 400,
-    });
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 400 }
+    );
   }
 }
