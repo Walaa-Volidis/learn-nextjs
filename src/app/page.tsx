@@ -25,7 +25,7 @@ type TaskFilter = {
 export default function TodoPage() {
   const { user } = useUser();
   const userId = user?.id;
-  const { tasks, addTask, deleteTask, isLoading, isAdding } = useTasks(userId);
+  const { tasks, addTask, deleteTask, isLoading } = useTasks(userId);
   const [filters, setFilters] = useState<TaskFilter>({
     search: "",
     category: "choose",
@@ -81,9 +81,7 @@ export default function TodoPage() {
             />
           </div>
 
-          {userId && (
-            <TaskForm userId={userId} addTask={addTask} isAdding={isAdding} />
-          )}
+          {userId && <TaskForm userId={userId} addTask={addTask} />}
 
           {isLoading ? (
             <div className="flex justify-center items-center">

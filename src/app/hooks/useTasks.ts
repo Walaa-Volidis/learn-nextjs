@@ -1,13 +1,23 @@
-import { Task } from "../types/task";
 import useSWR, { mutate } from "swr";
-import { useState } from "react";
+import { z } from "zod";
+
+const ZTaskSchema = z.object({
+  id: z.number().optional(),
+  title: z.string(),
+  description: z.string(),
+  category: z.string(),
+  date: z.string(),
+  userId: z.string(),
+});
+export type Task = z.infer<typeof ZTaskSchema>;
 
 const fetcher = async (url: string) => {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Failed to fetch tasks");
   }
-  return response.json();
+  const data = await response.json();
+  return ZTaskSchema.array().parse(data);
 };
 
 export function useTasks(userId: string | undefined) {
@@ -15,18 +25,16 @@ export function useTasks(userId: string | undefined) {
     userId ? "/api/list-tasks" : null,
     fetcher
   );
-  const [isAdding, setIsAdding] = useState(false);
 
   const addTask = async (formData: FormData) => {
-    setIsAdding(true);
     try {
-      const formDataTask = {
-        title: formData.get("title") as string,
-        description: formData.get("description") as string,
-        category: formData.get("category") as string,
-        date: formData.get("date") as string,
-        userId: formData.get("userId") as string,
-      };
+      const formDataTask = ZTaskSchema.parse({
+        title: formData.get("title"),
+        description: formData.get("description"),
+        category: formData.get("category"),
+        date: formData.get("date"),
+        userId: formData.get("userId"),
+      });
 
       mutate("/api/list-tasks", [...(tasks || []), formDataTask], false);
 
@@ -40,13 +48,11 @@ export function useTasks(userId: string | undefined) {
       }
 
       const newTask = await response.json();
-
+      ZTaskSchema.parse(newTask);
       mutate("/api/list-tasks");
     } catch (error) {
       console.error("Failed to add task:", error);
       mutate("/api/list-tasks");
-    } finally {
-      setIsAdding(false);
     }
   };
 
@@ -54,7 +60,7 @@ export function useTasks(userId: string | undefined) {
     try {
       mutate(
         "/api/list-tasks",
-        tasks.filter((task) => task.id !== id),
+        tasks.filter((task) => task.id !== Number(id)),
         false
       );
 
@@ -77,7 +83,6 @@ export function useTasks(userId: string | undefined) {
     tasks,
     error,
     isLoading: !error && !tasks,
-    isAdding,
     addTask,
     deleteTask,
   };

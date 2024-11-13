@@ -18,17 +18,15 @@ import {
 import { PlusCircle } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ClipLoader } from "react-spinners";
 
 const Categories_List = ["choose", "Work", "Personal", "Health", "Other"];
 
 interface TaskFormProps {
   userId: string;
   addTask: (formData: FormData) => Promise<void>;
-  isAdding: boolean;
 }
 
-export default function TaskForm({ userId, addTask, isAdding }: TaskFormProps) {
+export default function TaskForm({ userId, addTask }: TaskFormProps) {
   const [task, setTask] = useState({
     title: "",
     description: "",
@@ -111,8 +109,8 @@ export default function TaskForm({ userId, addTask, isAdding }: TaskFormProps) {
             }
             required
           />
-          <Button type="submit" className="w-full" disabled={isAdding}>
-            {isAdding ? <ClipLoader size={20} color={"#fff"} /> : "Add Task"}
+          <Button type="submit" className="w-full">
+             Add Task
           </Button>
         </form>
       </DialogContent>
