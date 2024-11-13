@@ -110,7 +110,7 @@ export default function TaskForm({ userId, addTask }: TaskFormProps) {
             required
           />
           <Button type="submit" className="w-full">
-            Add Task
+             Add Task
           </Button>
         </form>
       </DialogContent>

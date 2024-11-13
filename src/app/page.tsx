@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,7 @@ import TaskForm from "@/app/components/TaskForm";
 import { TaskList } from "@/app/components/TaskList";
 import { useTasks } from "@/app/hooks/useTasks";
 import { useUser } from "@clerk/nextjs";
+import { ClipLoader } from "react-spinners";
 
 type TaskFilter = {
   search: string;
@@ -25,7 +25,7 @@ type TaskFilter = {
 export default function TodoPage() {
   const { user } = useUser();
   const userId = user?.id;
-  const { tasks, addTask, deleteTask } = useTasks(userId);
+  const { tasks, addTask, deleteTask, isLoading } = useTasks(userId);
   const [filters, setFilters] = useState<TaskFilter>({
     search: "",
     category: "choose",
@@ -83,7 +83,13 @@ export default function TodoPage() {
 
           {userId && <TaskForm userId={userId} addTask={addTask} />}
 
-          <TaskList tasks={tasks} onDelete={deleteTask} />
+          {isLoading ? (
+            <div className="flex justify-center items-center">
+              <ClipLoader size={50} color={"#123abc"} loading={isLoading} />
+            </div>
+          ) : (
+            <TaskList tasks={tasks} onDelete={deleteTask} />
+          )}
         </CardContent>
       </Card>
     </div>
