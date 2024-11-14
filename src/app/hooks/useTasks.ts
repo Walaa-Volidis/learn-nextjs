@@ -41,7 +41,11 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
         userId: formData.get("userId"),
       });
 
-      mutate("/api/list-tasks", [...(tasks || []), formDataTask], false);
+      mutate(
+        `/api/list-tasks?${query}`,
+        [...(tasks || []), formDataTask],
+        false
+      );
 
       const response = await fetch("/api/create-task", {
         method: "POST",
@@ -54,17 +58,17 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
 
       const newTask = await response.json();
       ZTaskSchema.parse(newTask);
-      mutate("/api/list-tasks");
+      mutate(`/api/list-tasks?${query}`);
     } catch (error) {
       console.error("Failed to add task:", error);
-      mutate("/api/list-tasks");
+      mutate(`/api/list-tasks?${query}`);
     }
   };
 
   const deleteTask = async (id: string) => {
     try {
       mutate(
-        "/api/list-tasks",
+        `/api/list-tasks?${query}`,
         tasks.filter((task) => task.id !== Number(id)),
         false
       );
@@ -77,10 +81,10 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
         throw new Error("Failed to delete task");
       }
 
-      mutate("/api/list-tasks");
+      mutate(`/api/list-tasks?${query}`);
     } catch (error) {
       console.error("Failed to delete task:", error);
-      mutate("/api/list-tasks");
+      mutate(`/api/list-tasks?${query}`);
     }
   };
 
@@ -94,7 +98,11 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
         userId: formData.get("userId"),
       });
 
-      mutate("/api/list-tasks", [...(tasks || []), formDataTask], false);
+      mutate(
+        `/api/list-tasks?${query}`,
+        [...(tasks || []), formDataTask],
+        false
+      );
 
       const response = await fetch("/api/update-task", {
         method: "PUT",
@@ -107,10 +115,10 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
 
       const newTask = await response.json();
       ZTaskSchema.parse(newTask);
-      mutate("/api/list-tasks");
+      mutate(`/api/list-tasks?${query}`);
     } catch (error) {
       console.error("Failed to update task:", error);
-      mutate("/api/list-tasks");
+      mutate(`/api/list-tasks?${query}`);
     }
   };
 
@@ -120,6 +128,6 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
     isLoading: !error && !tasks,
     addTask,
     deleteTask,
-    updateTask
+    updateTask,
   };
 }
