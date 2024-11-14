@@ -84,11 +84,42 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
     }
   };
 
+  const updateTask = async (formData: FormData) => {
+    try {
+      const formDataTask = ZTaskSchema.parse({
+        title: formData.get("title"),
+        description: formData.get("description"),
+        category: formData.get("category"),
+        date: formData.get("date"),
+        userId: formData.get("userId"),
+      });
+
+      mutate("/api/list-tasks", [...(tasks || []), formDataTask], false);
+
+      const response = await fetch("/api/update-task", {
+        method: "PUT",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update task");
+      }
+
+      const newTask = await response.json();
+      ZTaskSchema.parse(newTask);
+      mutate("/api/list-tasks");
+    } catch (error) {
+      console.error("Failed to update task:", error);
+      mutate("/api/list-tasks");
+    }
+  };
+
   return {
     tasks,
     error,
     isLoading: !error && !tasks,
     addTask,
     deleteTask,
+    updateTask
   };
 }
