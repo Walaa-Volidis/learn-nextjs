@@ -1,5 +1,6 @@
 import useSWR, { mutate } from "swr";
 import { z } from "zod";
+import { TaskSearch } from "../types/task";
 
 const ZTaskSchema = z.object({
   id: z.number().optional(),
@@ -20,9 +21,13 @@ const fetcher = async (url: string) => {
   return ZTaskSchema.array().parse(data);
 };
 
-export function useTasks(userId: string | undefined) {
+export function useTasks(userId: string | undefined, filters: TaskSearch) {
+  const query = new URLSearchParams(
+    filters as Record<string, string>
+  ).toString();
+
   const { data: tasks = [], error } = useSWR<Task[]>(
-    userId ? "/api/list-tasks" : null,
+    userId ? `/api/list-tasks?${query}` : null,
     fetcher
   );
 
