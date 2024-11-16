@@ -121,6 +121,20 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
     }
   };
 
+  async function translateText(arabicText: string): Promise<string> {
+    const response = await fetch("/api/translate", {
+      method: "POST",
+      body: JSON.stringify({ arabicText }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Translation failed");
+    }
+
+    const data = await response.json();
+    return data.translatedText;
+  }
+
   return {
     tasks,
     error,
@@ -128,5 +142,6 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
     addTask,
     deleteTask,
     updateTask,
+    translateText,
   };
 }

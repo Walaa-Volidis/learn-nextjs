@@ -32,10 +32,8 @@ export default function TodoPage() {
     category: "choose",
     date: "",
   });
-  const { tasks, addTask, deleteTask, updateTask, isLoading } = useTasks(
-    userId,
-    filters
-  );
+  const { tasks, addTask, deleteTask, updateTask, isLoading, translateText } =
+    useTasks(userId, filters);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -86,7 +84,13 @@ export default function TodoPage() {
             />
           </div>
 
-          {userId && <TaskForm userId={userId} addTask={addTask} />}
+          {userId && (
+            <TaskForm
+              userId={userId}
+              addTask={addTask}
+              translateText={translateText}
+            />
+          )}
 
           {isLoading ? (
             <div className="flex justify-center items-center">
