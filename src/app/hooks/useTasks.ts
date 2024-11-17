@@ -10,6 +10,8 @@ const ZTaskSchema = z.object({
   date: z.string(),
   userId: z.string(),
 });
+
+
 export type Task = z.infer<typeof ZTaskSchema>;
 
 const fetcher = async (url: string) => {
@@ -88,7 +90,7 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
     }
   };
 
-  const updateTask = async (formData: FormData) => {
+  const updateTask = async (formData: FormData, id: string) => {
     try {
       const formDataTask = ZTaskSchema.parse({
         title: formData.get("title"),
@@ -103,9 +105,8 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
         [...(tasks || []), formDataTask],
         false
       );
-
-      const response = await fetch("/api/update-task", {
-        method: "PUT",
+      const response = await fetch(`/api/update-task/${id}`, {
+        method: "PATCH",
         body: formData,
       });
 
@@ -113,14 +114,14 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
         throw new Error("Failed to update task");
       }
 
-      const newTask = await response.json();
-      ZTaskSchema.parse(newTask);
+      ZTaskSchema.parse(await response.json());
       mutate(`/api/list-tasks?${query}`);
     } catch (error) {
       console.error("Failed to update task:", error);
       mutate(`/api/list-tasks?${query}`);
     }
   };
+
 
   return {
     tasks,

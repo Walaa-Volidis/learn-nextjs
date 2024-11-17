@@ -13,57 +13,34 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { PlusCircle } from "lucide-react";
 import { toast } from "react-toastify";
+import { Task } from "../types/task";
 
-const CategoriesList = ["choose", "Work", "Personal", "Health", "Other"];
+const Categories_List = ["choose", "Work", "Personal", "Health", "Other"];
 
-interface TaskFormProps {
-  userId: string;
-  addTask: (formData: FormData) => Promise<void>;
+interface TaskUpdateFormProps {
+  task: Task;
+  updateTask: (formData: FormData, id: string) => Promise<void>;
+  onClose: () => void;
 }
 
-export default function TaskForm({ userId, addTask }: TaskFormProps) {
-  const [task, setTask] = useState({
-    title: "",
-    description: "",
-    category: "choose",
-    date: "",
-  });
-
-  // function containsArabic(text: string): boolean {
-  //   const arabicRegex = /[\u0600-\u06FF]/;
-  //   return arabicRegex.test(text);
-  // }
+export default function TaskUpdateForm({
+  task,
+  updateTask,
+  onClose,
+}: TaskUpdateFormProps) {
+  const [updatedTask, setUpdatedTask] = useState(task);
+  updatedTask.date = new Date(task.date).toISOString().split("T")[0];
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    formData.append("userId", userId);
-
+    formData.append("userId", task.userId);
     try {
-      // if (containsArabic(task.title)) {
-      //   const translatedTitle = await translateText(task.title);
-      //   formData.set("title", translatedTitle);
-      // }
-
-      // if (containsArabic(task.description)) {
-      //   const translatedDescription = await translateText(task.description);
-      //   console.log("translatedDescription", translatedDescription);
-      //   formData.set("description", translatedDescription);
-      // }
-
-      await addTask(formData);
-      toast.success("Task added successfully.");
-
-      setTask({
-        title: "",
-        description: "",
-        category: "choose",
-        date: "",
-      });
+      await updateTask(formData, task.id);
+      toast.success("Task updated successfully.");
+      onClose();
     } catch (error) {
       toast.error("Error submitting task. Please try again.");
       console.error("Error submitting task:", error);
@@ -71,45 +48,45 @@ export default function TaskForm({ userId, addTask }: TaskFormProps) {
   }
 
   return (
-    <Dialog>
-      <DialogTrigger>
-        <PlusCircle />
-      </DialogTrigger>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New ToDo Task</DialogTitle>
+          <DialogTitle>Update Task</DialogTitle>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4">
           <Input
             placeholder="Title"
             name="title"
-            value={task.title}
+            value={updatedTask.title}
             onChange={(e) =>
-              setTask((prev) => ({ ...prev, title: e.target.value }))
+              setUpdatedTask((prev) => ({ ...prev, title: e.target.value }))
             }
             required
           />
           <Input
             placeholder="Description"
             name="description"
-            value={task.description}
+            value={updatedTask.description}
             onChange={(e) =>
-              setTask((prev) => ({ ...prev, description: e.target.value }))
+              setUpdatedTask((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
             }
             required
           />
           <Select
             name="category"
-            value={task.category}
+            value={updatedTask.category}
             onValueChange={(value) =>
-              setTask((prev) => ({ ...prev, category: value }))
+              setUpdatedTask((prev) => ({ ...prev, category: value }))
             }
           >
             <SelectTrigger>
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
-              {CategoriesList.map((category) => (
+              {Categories_List.map((category) => (
                 <SelectItem key={category} value={category}>
                   {category}
                 </SelectItem>
@@ -119,14 +96,14 @@ export default function TaskForm({ userId, addTask }: TaskFormProps) {
           <Input
             name="date"
             type="date"
-            value={task.date}
+            value={updatedTask.date}
             onChange={(e) =>
-              setTask((prev) => ({ ...prev, date: e.target.value }))
+              setUpdatedTask((prev) => ({ ...prev, date: e.target.value }))
             }
             required
           />
           <Button type="submit" className="w-full">
-            Add Task
+            Update Task
           </Button>
         </form>
       </DialogContent>

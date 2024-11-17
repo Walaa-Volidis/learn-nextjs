@@ -15,6 +15,8 @@ import { TaskList } from "@/app/components/TaskList";
 import { useTasks } from "@/app/hooks/useTasks";
 import { useUser } from "@clerk/nextjs";
 import { ClipLoader } from "react-spinners";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type TaskFilter = {
   search: string;
@@ -30,7 +32,8 @@ export default function TodoPage() {
     category: "all",
     date: "",
   });
-  const { tasks, addTask, deleteTask, isLoading } = useTasks(userId, filters);
+  const { tasks, addTask, deleteTask, updateTask, isLoading } =
+    useTasks(userId, filters);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -81,17 +84,27 @@ export default function TodoPage() {
             />
           </div>
 
-          {userId && <TaskForm userId={userId} addTask={addTask} />}
+          {userId && (
+            <TaskForm
+              userId={userId}
+              addTask={addTask}
+            />
+          )}
 
           {isLoading ? (
             <div className="flex justify-center items-center">
               <ClipLoader size={50} color={"#123abc"} loading={isLoading} />
             </div>
           ) : (
-            <TaskList tasks={tasks} onDelete={deleteTask} />
+            <TaskList
+              tasks={tasks}
+              onDelete={deleteTask}
+              onUpdate={updateTask}
+            />
           )}
         </CardContent>
       </Card>
+      <ToastContainer />
     </div>
   );
 }
