@@ -29,7 +29,7 @@ export default function TodoPage() {
   const userId = user?.id;
   const [filters, setFilters] = useState<TaskFilter>({
     search: "",
-    category: "choose",
+    category: "all",
     date: "",
   });
   const { tasks, addTask, deleteTask, updateTask, isLoading } =
