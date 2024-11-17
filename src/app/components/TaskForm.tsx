@@ -18,7 +18,7 @@ import {
 import { PlusCircle } from "lucide-react";
 import { toast } from "react-toastify";
 
-const Categories_List = ["choose", "Work", "Personal", "Health", "Other"];
+const CategoriesList = ["choose", "Work", "Personal", "Health", "Other"];
 
 interface TaskFormProps {
   userId: string;
@@ -110,7 +110,7 @@ export default function TaskForm({ userId, addTask, translateText }: TaskFormPro
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
-              {Categories_List.map((category) => (
+              {CategoriesList.map((category) => (
                 <SelectItem key={category} value={category}>
                   {category}
                 </SelectItem>
