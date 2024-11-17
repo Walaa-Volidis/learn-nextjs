@@ -11,9 +11,7 @@ const ZTaskSchema = z.object({
   userId: z.string(),
 });
 
-const ZTranslationSchema = z.object({
-  translatedText: z.string(),
-});
+
 export type Task = z.infer<typeof ZTaskSchema>;
 
 const fetcher = async (url: string) => {
@@ -124,19 +122,6 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
     }
   };
 
-  async function translateText(arabicText: string): Promise<string> {
-    const response = await fetch("/api/translate", {
-      method: "POST",
-      body: JSON.stringify({ arabicText }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Translation failed");
-    }
-
-    const parsed = ZTranslationSchema.parse(await response.json());
-    return parsed.translatedText;
-  }
 
   return {
     tasks,
@@ -145,6 +130,5 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
     addTask,
     deleteTask,
     updateTask,
-    translateText,
   };
 }

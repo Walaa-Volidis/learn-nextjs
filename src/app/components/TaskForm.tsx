@@ -23,10 +23,9 @@ const CategoriesList = ["choose", "Work", "Personal", "Health", "Other"];
 interface TaskFormProps {
   userId: string;
   addTask: (formData: FormData) => Promise<void>;
-  translateText: (arabicText: string) => Promise<string>;
 }
 
-export default function TaskForm({ userId, addTask, translateText }: TaskFormProps) {
+export default function TaskForm({ userId, addTask }: TaskFormProps) {
   const [task, setTask] = useState({
     title: "",
     description: "",
@@ -34,10 +33,10 @@ export default function TaskForm({ userId, addTask, translateText }: TaskFormPro
     date: "",
   });
 
-  function containsArabic(text: string): boolean {
-    const arabicRegex = /[\u0600-\u06FF]/;
-    return arabicRegex.test(text);
-  }
+  // function containsArabic(text: string): boolean {
+  //   const arabicRegex = /[\u0600-\u06FF]/;
+  //   return arabicRegex.test(text);
+  // }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -45,16 +44,16 @@ export default function TaskForm({ userId, addTask, translateText }: TaskFormPro
     formData.append("userId", userId);
 
     try {
-      if (containsArabic(task.title)) {
-        const translatedTitle = await translateText(task.title);
-        formData.set("title", translatedTitle);
-      }
+      // if (containsArabic(task.title)) {
+      //   const translatedTitle = await translateText(task.title);
+      //   formData.set("title", translatedTitle);
+      // }
 
-      if (containsArabic(task.description)) {
-        const translatedDescription = await translateText(task.description);
-        console.log("translatedDescription", translatedDescription);
-        formData.set("description", translatedDescription);
-      }
+      // if (containsArabic(task.description)) {
+      //   const translatedDescription = await translateText(task.description);
+      //   console.log("translatedDescription", translatedDescription);
+      //   formData.set("description", translatedDescription);
+      // }
 
       await addTask(formData);
       toast.success("Task added successfully.");

@@ -32,7 +32,7 @@ export default function TodoPage() {
     category: "choose",
     date: "",
   });
-  const { tasks, addTask, deleteTask, updateTask, isLoading, translateText } =
+  const { tasks, addTask, deleteTask, updateTask, isLoading } =
     useTasks(userId, filters);
 
   return (
@@ -88,7 +88,6 @@ export default function TodoPage() {
             <TaskForm
               userId={userId}
               addTask={addTask}
-              translateText={translateText}
             />
           )}
 
