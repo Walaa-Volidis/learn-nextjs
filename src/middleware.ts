@@ -5,9 +5,11 @@ const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
 
 export default clerkMiddleware(async (auth, request) => {
   if (!isPublicRoute(request)) {
+    await auth.protect();
+
     try {
       const { userId, getToken } = getAuth(request);
-     
+
       if (userId) {
         const user = await fetch(`https://api.clerk.dev/v1/users/${userId}`, {
           headers: {
@@ -22,7 +24,7 @@ export default clerkMiddleware(async (auth, request) => {
             name: user.full_name || "",
             createdAt: new Date().toISOString(),
           };
-        console.log(user);
+          console.log(user);
           await fetch("/api/create-user", {
             method: "POST",
             headers: {
