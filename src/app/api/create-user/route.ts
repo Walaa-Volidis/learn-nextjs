@@ -11,7 +11,16 @@ const ZUserSchema = z.object({
 export async function POST(request: Request) {
   try {
     const user = ZUserSchema.parse(await request.json());
-    const response = await prisma.user.create({ data: user });
+    const response = await prisma.user.upsert({
+      where: { email: user.id },
+      update: {
+        name: user.name,
+        email: user.email,
+      },
+      create: {
+        ...user,
+      },
+    });
     return new Response(JSON.stringify(response), { status: 201 });
   } catch (error) {
     console.log(error);
