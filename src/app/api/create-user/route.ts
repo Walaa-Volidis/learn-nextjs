@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   try {
     const user = ZUserSchema.parse(await request.json());
     const response = await prisma.user.upsert({
-      where: { email: user.id },
+      where: { email: user.email },
       update: {
         name: user.name,
         email: user.email,
