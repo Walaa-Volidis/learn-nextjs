@@ -18,7 +18,8 @@ export default clerkMiddleware(async (auth, request) => {
             name: user.firstName || "",
             createdAt: new Date().toISOString(),
           };
-          await fetch("/api/create-user", {
+          console.log("userData", userData);
+          await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/create-user`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

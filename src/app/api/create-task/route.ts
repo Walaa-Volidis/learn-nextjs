@@ -60,7 +60,6 @@ export async function POST(request: Request) {
       );
     }
     await Promise.all(translationPromises);
-    console.log("hey task", task);
     const response = await prisma.task.create({ data: task });
     return new Response(JSON.stringify(response), { status: 201 });
   } catch (error) {
