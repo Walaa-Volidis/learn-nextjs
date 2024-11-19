@@ -1,30 +1,23 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/fastify";
 
 const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
 
 export default clerkMiddleware(async (auth, request) => {
   if (!isPublicRoute(request)) {
     await auth.protect();
-
     try {
-      const { userId, getToken } = getAuth(request);
+      const { userId } = await auth();
 
       if (userId) {
-        const user = await fetch(`https://api.clerk.dev/v1/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${await getToken()}`,
-          },
-        }).then((res) => res.json());
-
+        const user = userId ? await clerkClient.users.getUser(userId) : null;
         if (user) {
           const userData = {
             id: userId,
-            email: user.email_addresses[0].email_address,
-            name: user.full_name || "",
+            email: user.emailAddresses[0].emailAddress || "",
+            name: user.firstName || "",
             createdAt: new Date().toISOString(),
           };
-          console.log(user);
           await fetch("/api/create-user", {
             method: "POST",
             headers: {

@@ -10,6 +10,7 @@ const ZUserSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    console.log("request", request);
     const user = ZUserSchema.parse(await request.json());
     const response = await prisma.user.upsert({
       where: { email: user.email },
@@ -24,8 +25,13 @@ export async function POST(request: Request) {
     return new Response(JSON.stringify(response), { status: 201 });
   } catch (error) {
     console.log(error);
-    return new Response(JSON.stringify({ error: (error as Error).message }), {
-      status: 400,
-    });
+    return new Response(
+      JSON.stringify({
+        error: "An error occurred while creating or updating user",
+      }),
+      {
+        status: 400,
+      }
+    );
   }
 }
