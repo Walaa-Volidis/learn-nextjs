@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { z } from "zod";
+import { SERVER_SETTINGS } from "@/settings";
 
 const ZTaskSchema = z.object({
   title: z.string(),
@@ -16,7 +17,7 @@ const containsArabic = (text: string) => /[\u0600-\u06FF]/.test(text);
 
 async function translateText(arabicText: string): Promise<string> {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/translate`,
+    `${SERVER_SETTINGS.publicApiEndpoint}/api/translate`,
     {
       method: "POST",
       headers: {

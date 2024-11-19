@@ -9,6 +9,7 @@ export const ZServerSettings = z.object({
     signUpUrl: z.string(),
   }),
   groqApiKey: z.string(),
+  baseUrl: z.string(),
 });
 
 export const SERVER_SETTINGS = ZServerSettings.parse({
@@ -20,4 +21,5 @@ export const SERVER_SETTINGS = ZServerSettings.parse({
     signUpUrl: process.env["NEXT_PUBLIC_CLERK_SIGN_UP_URL"],
   },
   groqApiKey: process.env["GROQ_API_KEY"],
+  baseUrl: process.env["DATABASE_URL"],
 });

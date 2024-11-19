@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/fastify";
+import { SERVER_SETTINGS } from "@/settings";
 
 const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
 
@@ -19,7 +20,7 @@ export default clerkMiddleware(async (auth, request) => {
             createdAt: new Date().toISOString(),
           };
           console.log("userData", userData);
-          await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/create-user`, {
+          await fetch(`${SERVER_SETTINGS.publicApiEndpoint}/api/create-user`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import Client from "groq-sdk";
+import { SERVER_SETTINGS } from "@/settings";
+
 const client = new Client({
-  apiKey: process.env.GROQ_API_KEY || "",
+  apiKey: SERVER_SETTINGS.groqApiKey || "",
 });
 
 export async function POST(req: Request) {
