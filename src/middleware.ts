@@ -1,43 +1,62 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { clerkClient } from "@clerk/fastify";
-import { SERVER_SETTINGS } from "@/settings";
+import { z } from "zod";
+import prisma from "@/lib/prisma";
 
+const ZSessionClaims = z.object({
+  email: z.string().email(),
+  name: z.string(),
+  userId: z.string(),
+});
+
+const ZUserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  createdAt: z.string().datetime(),
+});
 const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
 
 export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect();
-    try {
-      const { userId } = await auth();
+  if (!isPublicRoute(request)) await auth.protect();
 
-      if (userId) {
-        const user = userId ? await clerkClient.users.getUser(userId) : null;
-        if (user) {
-          const userData = {
-            id: userId,
-            email: user.emailAddresses[0].emailAddress || "",
-            name: user.firstName || "",
-            createdAt: new Date().toISOString(),
-          };
-          console.log("userData", userData);
-          await fetch(`${SERVER_SETTINGS.publicApiEndpoint}/api/create-user`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(userData),
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error creating or retrieving user:", error);
+  try {
+    const { userId, sessionClaims } = await auth();
+    const result = ZSessionClaims.safeParse(sessionClaims);
+
+    if (!result.success) {
+      return new Response("Invalid session claims", { status: 400 });
     }
+
+    const { email } = result.data;
+    if (userId) {
+      const userData = {
+        id: userId,
+        email: email,
+        name: sessionClaims.name || "",
+        createdAt: new Date().toISOString(),
+      };
+
+      const user = ZUserSchema.parse(userData);
+      await prisma.user.upsert({
+        where: { email: user.email },
+        update: {
+          name: user.name,
+          email: user.email,
+        },
+        create: {
+          ...user,
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Error in middleware:", error);
+    return new Response("Internal Server Error", { status: 500 });
   }
 });
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
+    // Skip Next.js internals and all static files
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     // Always run for API routes
     "/(api|trpc)(.*)",
