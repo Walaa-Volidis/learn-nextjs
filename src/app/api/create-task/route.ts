@@ -39,11 +39,11 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const task = ZTaskSchema.parse({
-      title: formData.get("title") as string,
-      description: formData.get("description") as string,
-      category: formData.get("category") as string,
+      title: formData.get("title"),
+      description: formData.get("description"),
+      category: formData.get("category"),
       date: new Date(formData.get("date") as string).toISOString(),
-      userId: formData.get("userId") as string,
+      userId: formData.get("userId"),
     });
     const translationPromises = [];
     if (containsArabic(task.title)) {
