@@ -5,53 +5,36 @@ import prisma from "@/lib/prisma";
 const ZSessionClaims = z.object({
   email: z.string().email(),
   name: z.string(),
-  userId: z.string(),
 });
 
-const ZUserSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string(),
-  createdAt: z.string().datetime(),
-});
-const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
+//const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
+
+const isProtectedRoute = createRouteMatcher(["/", "/api(.*)"]);
 
 export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) await auth.protect();
-
-  try {
-    const { userId, sessionClaims } = await auth();
-    const result = ZSessionClaims.safeParse(sessionClaims);
-
-    if (!result.success) {
-      return new Response("Invalid session claims", { status: 400 });
-    }
-
-    const { email } = result.data;
-    if (userId) {
-      const userData = {
-        id: userId,
-        email: email,
-        name: sessionClaims.name || "",
-        createdAt: new Date().toISOString(),
-      };
-
-      const user = ZUserSchema.parse(userData);
-      await prisma.user.upsert({
-        where: { email: user.email },
-        update: {
-          name: user.name,
-          email: user.email,
-        },
-        create: {
-          ...user,
-        },
-      });
-    }
-  } catch (error) {
-    console.error("Error in middleware:", error);
-    return new Response("Internal Server Error", { status: 500 });
+  console.log("Middleware start ...?");
+  if (isProtectedRoute(request)) {
+    await auth.protect();
+    //return;
   }
+
+  const { sessionClaims } = await auth();
+  const { email, name } = ZSessionClaims.parse(sessionClaims);
+
+  console.log("email", email);
+  console.log("Middleware is being called!!!");
+
+  await prisma.user.upsert({
+    where: { email },
+    update: {
+      name,
+      email,
+    },
+    create: {
+      name,
+      email,
+    },
+  });
 });
 
 export const config = {

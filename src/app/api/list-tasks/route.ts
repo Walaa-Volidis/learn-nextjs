@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { type NextRequest } from "next/server";
+import { getUser } from "@/get-user";
 
 const ZTaskSchema = z.object({
   id: z.number(),
@@ -8,10 +9,12 @@ const ZTaskSchema = z.object({
   description: z.string(),
   category: z.string(),
   date: z.string().datetime(),
-  userId: z.string(),
 });
 
 export async function GET(request: NextRequest) {
+  const user = await getUser();
+  console.log("List tasks");
+  console.log(user);
   const searchParams = request.nextUrl.searchParams;
   const search = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
@@ -19,6 +22,7 @@ export async function GET(request: NextRequest) {
 
   const response = await prisma.task.findMany({
     where: {
+      userId: user.id,
       OR: [
         {
           title: {
