@@ -22,10 +22,10 @@ const fetcher = async (url: string) => {
   return ZTaskSchema.array().parse(data);
 };
 
-export function useTasks(userId: string | undefined, filters: TaskSearch) {
+export function useTasks(userId: string, filters: TaskSearch) {
   const query = new URLSearchParams({
     ...filters,
-    userId: userId || "",
+    userId: userId,
   }).toString();
 
   const { data: tasks = [], error } = useSWR<Task[]>(
