@@ -21,14 +21,15 @@ export default clerkMiddleware(async (auth, request) => {
 
   try {
     const { userId, sessionClaims } = await auth();
-    const result = ZSessionClaims.safeParse(sessionClaims);
 
-    if (!result.success) {
-      return new Response("Invalid session claims", { status: 400 });
-    }
-
-    const { email } = result.data;
     if (userId) {
+      const result = ZSessionClaims.safeParse(sessionClaims);
+
+      if (!result.success) {
+        return new Response("Invalid session claims", { status: 400 });
+      }
+
+      const { email } = result.data;
       const userData = {
         id: userId,
         email: email,

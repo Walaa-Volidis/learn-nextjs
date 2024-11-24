@@ -11,7 +11,6 @@ const ZTaskSchema = z.object({
   userId: z.string(),
 });
 
-
 export type Task = z.infer<typeof ZTaskSchema>;
 
 const fetcher = async (url: string) => {
@@ -23,10 +22,11 @@ const fetcher = async (url: string) => {
   return ZTaskSchema.array().parse(data);
 };
 
-export function useTasks(userId: string | undefined, filters: TaskSearch) {
-  const query = new URLSearchParams(
-    filters as Record<string, string>
-  ).toString();
+export function useTasks(userId: string, filters: TaskSearch) {
+  const query = new URLSearchParams({
+    ...filters,
+    userId: userId,
+  }).toString();
 
   const { data: tasks = [], error } = useSWR<Task[]>(
     userId ? `/api/list-tasks?${query}` : null,
@@ -121,7 +121,6 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
       mutate(`/api/list-tasks?${query}`);
     }
   };
-
 
   return {
     tasks,

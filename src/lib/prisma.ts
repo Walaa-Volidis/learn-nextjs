@@ -4,7 +4,6 @@ import { Pool } from "@neondatabase/serverless";
 import { SERVER_SETTINGS } from "@/settings";
 
 const prismaClientSingleton = () => {
-  //neonConfig.webSocketConstructor = ws;
   const connectionString = `${SERVER_SETTINGS.baseUrl}`;
 
   const pool = new Pool({ connectionString });

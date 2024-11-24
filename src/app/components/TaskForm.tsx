@@ -33,28 +33,12 @@ export default function TaskForm({ userId, addTask }: TaskFormProps) {
     date: "",
   });
 
-  // function containsArabic(text: string): boolean {
-  //   const arabicRegex = /[\u0600-\u06FF]/;
-  //   return arabicRegex.test(text);
-  // }
-
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formData.append("userId", userId);
 
     try {
-      // if (containsArabic(task.title)) {
-      //   const translatedTitle = await translateText(task.title);
-      //   formData.set("title", translatedTitle);
-      // }
-
-      // if (containsArabic(task.description)) {
-      //   const translatedDescription = await translateText(task.description);
-      //   console.log("translatedDescription", translatedDescription);
-      //   formData.set("description", translatedDescription);
-      // }
-
       await addTask(formData);
       toast.success("Task added successfully.");
 
