@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { type NextRequest } from "next/server";
+import { getUser } from "@/lib/get-user";
 
 const ZTaskSchema = z.object({
   id: z.number(),
@@ -12,18 +13,14 @@ const ZTaskSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const user = await getUser();
   const searchParams = request.nextUrl.searchParams;
   const search = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
   const date = searchParams.get("date") || "";
-  const userId = searchParams.get("userId");
-  console.log("userId", userId);
-  if (!userId) {
-    return new Response("User ID is required", { status: 400 });
-  }
   const response = await prisma.task.findMany({
     where: {
-      userId: userId,
+      userId: user.id,
       OR: [
         {
           title: {

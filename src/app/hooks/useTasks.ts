@@ -22,17 +22,15 @@ const fetcher = async (url: string) => {
   return ZTaskSchema.array().parse(data);
 };
 
-export function useTasks(userId: string, filters: TaskSearch) {
-  const query = new URLSearchParams({
-    ...filters,
-    userId: userId,
-  }).toString();
+export function useTasks(userId: string | undefined, filters: TaskSearch) {
+  const query = new URLSearchParams(
+    filters as Record<string, string>
+  ).toString();
 
   const { data: tasks = [], error } = useSWR<Task[]>(
     userId ? `/api/list-tasks?${query}` : null,
     fetcher
   );
-
   const addTask = async (formData: FormData) => {
     try {
       const formDataTask = ZTaskSchema.parse({
