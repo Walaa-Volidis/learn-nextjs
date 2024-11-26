@@ -38,11 +38,11 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const task = ZTaskSchema.parse({
-      title: formData.get("title"),
-      description: formData.get("description"),
-      category: formData.get("category"),
-      date: new Date(formData.get("date") as string).toISOString(),
-      userId: formData.get("userId"),
+      title: formData.get("title")?.toString() || "",
+      description: formData.get("description")?.toString() || "",
+      category: formData.get("category")?.toString() || "",
+      date: new Date(formData.get("date")?.toString() || "").toISOString(),
+      userId: formData.get("userId")?.toString() || "",
     });
 
     const translationPromises = [];
