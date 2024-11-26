@@ -11,9 +11,10 @@ const ZTaskSchema = z.object({
 });
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   try {
+    const { id } = await params;
     const formData = await request.formData();
     const task = ZTaskSchema.parse({
       title: formData.get("title"),
@@ -24,7 +25,7 @@ export async function PATCH(
     });
     const updatedTask = await prisma.task.update({
       where: {
-        id: parseInt(params.id, 10),
+        id: parseInt(id, 10),
       },
       data: task,
     });
