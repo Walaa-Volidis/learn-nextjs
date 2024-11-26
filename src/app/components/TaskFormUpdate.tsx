@@ -15,12 +15,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "react-toastify";
-import { Task } from "../types/task";
+import { TaskWithId } from "../types/task";
 
 const Categories_List = ["choose", "Work", "Personal", "Health", "Other"];
 
 interface TaskUpdateFormProps {
-  task: Task;
+  task: TaskWithId;
   updateTask: (formData: FormData, id: string) => Promise<void>;
   onClose: () => void;
 }
