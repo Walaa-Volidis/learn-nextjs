@@ -9,7 +9,7 @@ export async function DELETE(
     const { id } = await params;
     const deletedTask = await prisma.task.delete({
       where: {
-        id: parseInt(id, 10),
+        id: id,
       },
     });
     return NextResponse.json(deletedTask, { status: 200 });
