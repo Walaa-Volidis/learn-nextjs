@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { SERVER_SETTINGS } from "@/settings";
+import Client from "groq-sdk";
 
 const ZTaskSchema = z.object({
   title: z.string(),
@@ -10,29 +11,27 @@ const ZTaskSchema = z.object({
   userId: z.string(),
 });
 
-const ZTranslationSchema = z.object({
-  translatedText: z.string(),
+const client = new Client({
+  apiKey: SERVER_SETTINGS.groqApiKey || "",
 });
+
 const containsArabic = (text: string) => /[\u0600-\u06FF]/.test(text);
 
 async function translateText(arabicText: string): Promise<string> {
-  const response = await fetch(
-    `${SERVER_SETTINGS.publicApiEndpoint}/api/translate`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  const response = await client.chat.completions.create({
+    model: "llama3-8b-8192",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a professional translator. Translate Arabic text to English without providing any additional explanations or details.",
       },
-      body: JSON.stringify({ arabicText }),
-    }
-  );
-  if (!response.ok) {
-    throw new Error("Translation failed");
-  }
+      { role: "user", content: arabicText },
+    ],
+  });
 
-  const parsed = ZTranslationSchema.parse(await response.json());
-  console.log(parsed.translatedText);
-  return parsed.translatedText;
+  const translatedText = response.choices[0]?.message?.content?.trim() || "";
+  return translatedText;
 }
 
 export async function POST(request: Request) {
@@ -45,6 +44,7 @@ export async function POST(request: Request) {
       date: new Date(formData.get("date") as string).toISOString(),
       userId: formData.get("userId"),
     });
+
     const translationPromises = [];
     if (containsArabic(task.title)) {
       translationPromises.push(
@@ -61,6 +61,7 @@ export async function POST(request: Request) {
       );
     }
     await Promise.all(translationPromises);
+
     const response = await prisma.task.create({ data: task });
     return new Response(JSON.stringify(response), { status: 201 });
   } catch (error) {
