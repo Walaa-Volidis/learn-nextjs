@@ -11,7 +11,7 @@ const ZTaskSchema = z.object({
 });
 
 const client = new Client({
-  apiKey: process.env.groqApiKey || "",
+  apiKey: process.env.GROQ_API_KEY || "",
 });
 
 const containsArabic = (text: string) => /[\u0600-\u06FF]/.test(text);
