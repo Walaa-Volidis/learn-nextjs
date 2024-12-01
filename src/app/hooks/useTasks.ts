@@ -3,7 +3,6 @@ import { z } from "zod";
 import { TaskSearch } from "../types/task";
 
 const ZTaskSchema = z.object({
-  id: z.number().optional(),
   title: z.string(),
   description: z.string(),
   category: z.string(),
@@ -11,7 +10,12 @@ const ZTaskSchema = z.object({
   userId: z.string(),
 });
 
+const TaskWithIdSchema = ZTaskSchema.extend({
+  id: z.string(),
+});
+
 export type Task = z.infer<typeof ZTaskSchema>;
+export type TaskWithId = z.infer<typeof TaskWithIdSchema>;
 
 const fetcher = async (url: string) => {
   const response = await fetch(url);
@@ -19,7 +23,7 @@ const fetcher = async (url: string) => {
     throw new Error("Failed to fetch tasks");
   }
   const data = await response.json();
-  return ZTaskSchema.array().parse(data);
+  return TaskWithIdSchema.array().parse(data);
 };
 
 export function useTasks(userId: string | undefined, filters: TaskSearch) {
@@ -27,10 +31,11 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
     filters as Record<string, string>
   ).toString();
 
-  const { data: tasks = [], error } = useSWR<Task[]>(
+  const { data: tasks = [], error } = useSWR<TaskWithId[]>(
     userId ? `/api/list-tasks?${query}` : null,
     fetcher
   );
+
   const addTask = async (formData: FormData) => {
     try {
       const formDataTask = ZTaskSchema.parse({
@@ -57,7 +62,7 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
       }
 
       const newTask = await response.json();
-      ZTaskSchema.parse(newTask);
+      TaskWithIdSchema.parse(newTask);
       mutate(`/api/list-tasks?${query}`);
     } catch (error) {
       console.error("Failed to add task:", error);
@@ -69,7 +74,7 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
     try {
       mutate(
         `/api/list-tasks?${query}`,
-        tasks.filter((task) => task.id !== Number(id)),
+        tasks.filter((task) => task.id !== id),
         false
       );
 
@@ -100,9 +105,12 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
 
       mutate(
         `/api/list-tasks?${query}`,
-        [...(tasks || []), formDataTask],
+        tasks.map((task) =>
+          task.id === id ? { ...task, ...formDataTask } : task
+        ),
         false
       );
+
       const response = await fetch(`/api/update-task/${id}`, {
         method: "PATCH",
         body: formData,
@@ -112,7 +120,7 @@ export function useTasks(userId: string | undefined, filters: TaskSearch) {
         throw new Error("Failed to update task");
       }
 
-      ZTaskSchema.parse(await response.json());
+      TaskWithIdSchema.parse(await response.json());
       mutate(`/api/list-tasks?${query}`);
     } catch (error) {
       console.error("Failed to update task:", error);

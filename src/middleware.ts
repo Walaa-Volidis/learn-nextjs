@@ -7,10 +7,10 @@ const ZSessionClaims = z.object({
   name: z.string(),
 });
 
-const isProtectedRoute = createRouteMatcher(["/", "/api(.*)"]);
+const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
 
 export default clerkMiddleware(async (auth, request) => {
-  if (isProtectedRoute(request)) {
+  if (!isPublicRoute(request)) {
     await auth.protect();
     //return;
   }

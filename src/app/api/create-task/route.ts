@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 import { z } from "zod";
-import { SERVER_SETTINGS } from "@/settings";
 import Client from "groq-sdk";
 
 const ZTaskSchema = z.object({
@@ -12,7 +11,7 @@ const ZTaskSchema = z.object({
 });
 
 const client = new Client({
-  apiKey: SERVER_SETTINGS.groqApiKey || "",
+  apiKey: process.env.GROQ_API_KEY || "",
 });
 
 const containsArabic = (text: string) => /[\u0600-\u06FF]/.test(text);

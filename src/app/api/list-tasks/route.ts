@@ -4,7 +4,7 @@ import { type NextRequest } from "next/server";
 import { getUser } from "@/lib/get-user";
 
 const ZTaskSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string(),
   description: z.string(),
   category: z.string(),

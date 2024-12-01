@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { Task } from "../types/task";
+import { TaskWithId } from "../types/task";
 import { Button } from "@/components/ui/button";
 import { TrashIcon, EditIcon } from "lucide-react";
 import TaskUpdateForm from "./TaskFormUpdate";
 
 interface TaskListProps {
-  tasks: Task[];
+  tasks: TaskWithId[];
   onDelete: (id: string) => void;
   onUpdate: (formData: FormData, id: string) => Promise<void>;
 }
 
 export function TaskList({ tasks, onDelete, onUpdate }: TaskListProps) {
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TaskWithId | null>(null);
 
   return (
     <div className="space-y-4">
