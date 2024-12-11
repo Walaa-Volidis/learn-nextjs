@@ -36,7 +36,7 @@ export function TaskList({ tasks, onDelete, onUpdate }: TaskListProps) {
                   {task.category}
                 </span>
                 <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
-                  Date: {new Date(task.date).toISOString().split("T")[0]}
+                  Date: ro
                 </span>
               </div>
             </div>
